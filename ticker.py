@@ -16,7 +16,6 @@ my_bittrex = Bittrex(None, None)
 def get_ticker_for_name(market_name):
 
 	result = my_bittrex.get_ticker(market_name)
-	print(result)
 	parsed_json = json.dumps(result)
 
 	t = json.loads(parsed_json)
