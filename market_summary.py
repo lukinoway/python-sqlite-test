@@ -1,7 +1,13 @@
+########################################
+# - Title:   Bittrex-Market-Summary
+# - Author:  Lukas Pichler
+# - Date:    2017-11-29
+########################################
+
 from bittrex import Bittrex
 import json
 
-my_bittrex = Bittrex(None, None)  # or defaulting to v1.1 as Bittrex(None, None)
+my_bittrex = Bittrex(None, None)
 
 result = my_bittrex.get_market_summaries()
 parsed_json = json.dumps(result)
