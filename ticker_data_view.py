@@ -6,12 +6,32 @@
 
 import datetime
 import sqlite3
+
+
+import plotly
+import plotly.graph_objs as go
 import plotly
 from plotly.graph_objs import Scatter, Layout
 
-# select data from kurs table
 
-ticker = "BTC-XLM"
+# calc sma
+def sma(y_data, window):
+	sma_y = []
+	for i in range(len(y_data)):
+		if i < window:
+			continue
+		else:
+			try:
+				sma_value = sum(y_data[i-window:i])/ window
+				sma_y.append(sma_value)
+			except:
+				print("ERROR")
+				print(y_data[i-window:i])
+			
+	return sma_y
+
+# select data from kurs tabl
+ticker = "kraken_XZECZEUR"
 db_location = "data/" + ticker
 
 db = sqlite3.connect(db_location)
@@ -34,11 +54,38 @@ for row in all_rows:
 
 db.close
 
+#  fast sma
+window_fast = 72
+sma_fast_trace = go.Scatter(
+	x = x_data[window_fast:],
+	y = sma(y_data, window_fast),
+	mode = 'lines',
+	name = 'sma_fast'
+)
+
+
+# slow sma
+window_slow = 480
+sma_slow_trace = go.Scatter(
+	x = x_data[window_slow:],
+	y = sma(y_data, window_slow),
+	mode = 'lines',
+	name = 'sma_slow'
+)
+
+# normal data
+data_trace = go.Scatter(
+	x = x_data,
+	y = y_data,
+	mode = 'line',
+	name = ticker
+)
+
+plot_data = [sma_fast_trace, sma_slow_trace, data_trace]
+
 plotly.offline.plot({
-    "data": [Scatter(x=x_data, y=y_data)],
-    "layout": Layout(title=ticker)
+	"data": plot_data,
+	"layout": Layout(title=ticker)
 })
-
-
 
 
