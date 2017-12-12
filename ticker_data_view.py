@@ -31,7 +31,7 @@ def sma(y_data, window):
 	return sma_y
 
 # select data from kurs tabl
-ticker = "kraken_XZECZEUR"
+ticker = "BTC-BCC"
 db_location = "data/" + ticker
 
 db = sqlite3.connect(db_location)
@@ -44,6 +44,10 @@ data = []
 x_data = []
 y_data = []
 for row in all_rows:
+	if row[1] == None:
+		print("corrupt data")
+		continue
+		
 	print('{0};{1};{2}'.format(row[0], row[1], row[2]))
 	data.append((row[0], row[1]))
 	format_date = datetime.datetime.fromtimestamp(
